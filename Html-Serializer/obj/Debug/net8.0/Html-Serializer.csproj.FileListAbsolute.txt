@@ -1,0 +1,16 @@
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\bin\Debug\net8.0\Html-Serializer.exe
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\bin\Debug\net8.0\Html-Serializer.deps.json
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\bin\Debug\net8.0\Html-Serializer.runtimeconfig.json
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\bin\Debug\net8.0\Html-Serializer.dll
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\bin\Debug\net8.0\Html-Serializer.pdb
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\Html-Serializer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\Html-Serializer.AssemblyInfoInputs.cache
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\Html-Serializer.AssemblyInfo.cs
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\Html-Serializer.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\Html-Serializer.dll
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\refint\Html-Serializer.dll
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\Html-Serializer.pdb
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\Html-Serializer.genruntimeconfig.cache
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\ref\Html-Serializer.dll
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\bin\Debug\net8.0\JSON Files\HtmlTags.json
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\bin\Debug\net8.0\JSON Files\HtmlVoidTags.json
