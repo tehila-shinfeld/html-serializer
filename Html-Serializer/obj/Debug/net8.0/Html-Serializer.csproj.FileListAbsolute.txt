@@ -14,3 +14,4 @@ C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Deb
 C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\ref\Html-Serializer.dll
 C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\bin\Debug\net8.0\JSON Files\HtmlTags.json
 C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\bin\Debug\net8.0\JSON Files\HtmlVoidTags.json
+C:\Users\USER\Documents\פרקטיקוד\Html-Serializer\Html-Serializer\obj\Debug\net8.0\html-Serializer.sourcelink.json

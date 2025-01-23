@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Html_Serializer
@@ -24,8 +25,11 @@ namespace Html_Serializer
         {
             if (string.IsNullOrWhiteSpace(query))
             {
-                Console.WriteLine("The query its not ok");
+                Console.WriteLine("The query is not valid.");
+                return null;
             }
+
+            // חלוקה לרמות לפי רווחים
             var levels = query.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
             Selector root = null;
@@ -34,48 +38,45 @@ namespace Html_Serializer
             foreach (var level in levels)
             {
                 var selector = new Selector();
-                var arrParts = level.Split(new[] { '#', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                var separators = level.Where(c => c == '#' || c == '.').ToArray();
 
-                // עיבוד החלקים
-                for (int i = 0; i < arrParts.Length; i++)
+                // חלוקה לפי מפרידים # ו-. (נקודה)
+                var parts = Regex.Split(level, @"(?=[#\.])");
+
+                foreach (var part in parts)
                 {
-                    // המקרה הראשון - הטאג הראשי
-                    if (i == 0 && (separators.Length == 0 || separators[0] != '#' && separators[0] != '.'))
+                    if (string.IsNullOrWhiteSpace(part)) continue;
+
+                    if (part.StartsWith("#"))
                     {
-                        if (HtmlHelper.Instance.arrHtmlTags.Contains(arrParts[i]))
-                            selector.TagName = arrParts[i];
+                        selector.Id = part.Substring(1); // החלק אחרי #
                     }
-                    else if (i > 0 && separators[i - 1] == '#') // בדוק ש-i גדול מ-0
+                    else if (part.StartsWith("."))
                     {
-                        selector.Id = arrParts[i];
+                        selector.Classes.Add(part.Substring(1)); // החלק אחרי .
                     }
-                    else if (i > 0 && separators[i - 1] == '.') // בדוק ש-i גדול מ-0
+                    else
                     {
-                        selector.Classes.Add(arrParts[i]);
+                        // אם זה לא מתחיל ב-# או . זה כנראה שם תגית
+                        if (HtmlHelper.Instance.arrHtmlTags.Contains(part))
+                            selector.TagName = part;
                     }
                 }
-                // חיבור לעץ
+
+                // יצירת הקשר לעץ הסלקטורים
                 if (root == null)
                 {
-                    root = selector;
+                    root = selector; // השורש של העץ
                 }
                 else
                 {
-                    current.Child = selector;
-                    selector.Parent = current;
+                    current.Child = selector; // חיבור הילד לסלקטור הנוכחי
+                    selector.Parent = current; // חיבור ההורה
                 }
 
-                // עדכון הסלקטור הנוכחי
-                current = selector;
+                current = selector; // עדכון הסלקטור הנוכחי
             }
 
             return root;
-        }
-
-        internal static object ParseQueryToSelectorObj()
-        {
-            throw new NotImplementedException();
         }
     }
 }

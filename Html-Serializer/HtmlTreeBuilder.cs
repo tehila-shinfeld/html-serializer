@@ -11,8 +11,8 @@ namespace Html_Serializer
     {
         private string GetFirstWord(string line)
         {
-            var match = Regex.Match(line, @"^/?\w+");
-            return match.Success ? match.Value : string.Empty;
+            var match = Regex.Match(line, @"^<\s*([a-zA-Z][a-zA-Z0-9]*)\b");
+            return match.Success ? match.Groups[1].Value.ToLower() : string.Empty;
         }
 
         private bool IsSelfClosingTag(string tagName, string line)
@@ -22,7 +22,7 @@ namespace Html_Serializer
 
         private HtmlElement CreateElement(string line, string tagName)
         {
-            var attributes = new Regex("([^\\s]*?)=\"(.*?)\"").Matches(line);
+            var attributes = new Regex(@"([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*=\s*""([^""]*)""").Matches(line);
             List<string> attributeList = new List<string>();
 
             foreach (Match match in attributes)
@@ -43,7 +43,7 @@ namespace Html_Serializer
 
             return new HtmlElement
             {
-                Name = tagName,
+                Name = Regex.Replace(tagName, @"class|id", ""),
                 Attributes = attributeList,
                 Classes = classes,
                 Id = id
@@ -51,7 +51,7 @@ namespace Html_Serializer
         }
 
         public  HtmlElement BuildTree(List<string> htmlLines)
-        {
+        { 
 
             var root = new HtmlElement { Name = "root" }; // אלמנט שורש מדומה
             var currentElement = root; // האובייקט הנוכחי בלולאה
@@ -77,8 +77,8 @@ namespace Html_Serializer
                         currentElement = stack.Peek();
                     }
                 }
-
-                else if (HtmlHelper.Instance.arrHtmlTags.Contains(firstWord))
+                //Regex.Replace(input, @"class|id", ""
+                else if (HtmlHelper.Instance.arrHtmlTags.Contains(Regex.Replace(firstWord, @"class|id", "")))
                 {
                     // תגית חדשה - יצירת אלמנט
                     var newElement = CreateElement(line, firstWord);
