@@ -8,38 +8,44 @@ static async Task<string> Load(string url)
     var html = await response.Content.ReadAsStringAsync();
     return html;
 }
+static string CleanHtml(string input)
+{
+    if (string.IsNullOrWhiteSpace(input))
+        return string.Empty;
+
+    // 1. מסיר רווחים בתחילת וסוף כל שורה
+    input = Regex.Replace(input, @"^\s+|\s+$", "", RegexOptions.Multiline);
+
+    // 2. מחליף רצף של רווחים (כולל טאב) ברווח בודד
+    input = Regex.Replace(input, @"[ \t]+", " ");
+
+    // 3. מוחק שורות ריקות (כולל שורות שמכילות רק רווחים)
+    input = Regex.Replace(input, @"^\s*\n", "", RegexOptions.Multiline);
+
+    return input;
+}
+static List<string> arrangeHtml(string html)
+{
+
+    var cleanHtml = CleanHtml(html);
+
+    var htmlLines = new Regex("<(.*?)>")
+        .Split(cleanHtml)
+        .Select(s => s.Trim()) // מסיר רווחים מכל פריט אחרי הפיצול
+        .Where(s => !string.IsNullOrWhiteSpace(s)) // מסיר שורות ריקות
+        .ToList();
+    return htmlLines;
+}
 var html = await Load("https://hebrewbooks.org/");
-// המחרוזת המקורית
-//var html = "<div id=\"root\">\r\n " +
-//    "   <div class=\"container\">\r\n " +
-//    "   <div class=\"item\"></div>\r\n     " +
-//    "   <div class=\"item\"></div>\r\n    </div>\r\n  " +
-//    "   <div class=\"container\">\r\n     " +
-//"   <div class=\"item\"></div>\r\n  " +
-//    "  </div>\r\n</div>";
-//var htmlWithoutSpace = new Regex("\\s").Replace(html, "");
-//var htmlWithoutSpace = new Regex("\\s").Replace(html, "");
-//var htmlLines = new Regex("<(.*?)>").Split(htmlWithoutSpace).Where(s => s.Length > 0).ToList();
-var htmlCleaned = string.Join("\n", html
-    .Split('\n')
-    .Select(line => line.Trim())
-    .Where(line => !string.IsNullOrWhiteSpace(line)));
-// שימוש ב-Regex לתיקון המחרוזת
-var htmlLines = new Regex("<(\\w+)([a-zA-Z0-9=\"\\s.-]*)>")
-    .Matches(htmlCleaned)
-    .Cast<Match>()
-    .Select(m => $"<{m.Groups[1].Value} {m.Groups[2].Value.Trim()}>")
-    .ToList();
+var cleanHtml = CleanHtml(html);
+var htmlLines =arrangeHtml(cleanHtml);
 //===============================================
-//בנית העץ
 HtmlTreeBuilder htmlTreeBuilder = new HtmlTreeBuilder();
 var root = htmlTreeBuilder.BuildTree(htmlLines);
 //פרק את השאילתה לסלקטור
-var selector = Selector.ParseQueryToSelectorObj("td");
-
+var selector = Selector.ParseQueryToSelectorObj(".keyboard");
 // חפש את הסלקטור בעץ
 var matchingElements = root.FindBySelector(selector);
-
 // בדוק אם הסלקטור נמצא
 if (matchingElements.Any())
 {
@@ -54,3 +60,6 @@ else
 {
     Console.WriteLine("Selector not found in HTML.");
 }
+
+
+

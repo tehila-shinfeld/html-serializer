@@ -11,8 +11,9 @@ namespace Html_Serializer
     {
         private string GetFirstWord(string line)
         {
-            var match = Regex.Match(line, @"^<\s*([a-zA-Z][a-zA-Z0-9]*)\b");
-            return match.Success ? match.Groups[1].Value.ToLower() : string.Empty;
+            return line.Split(' ')[0];
+            //var match = Regex.Match(line, @"^<\s*([a-zA-Z][a-zA-Z0-9]*)\b");
+            //return match.Success ? match.Groups[1].Value.ToLower() : string.Empty;
         }
 
         private bool IsSelfClosingTag(string tagName, string line)
@@ -33,13 +34,13 @@ namespace Html_Serializer
 
             var classes = attributeList
             .Where(attr => attr.StartsWith("class=\""))
-            .Select(attr => attr.Substring(7, attr.Length - 8)) 
-            .ToList(); 
+            .Select(attr => attr.Substring(7, attr.Length - 8))
+            .ToList();
 
             var id = attributeList
-            .Where(attr => attr.StartsWith("id=\"")) 
-            .Select(attr => attr.Substring(4, attr.Length - 5)) 
-            .FirstOrDefault(); 
+            .Where(attr => attr.StartsWith("id=\""))
+            .Select(attr => attr.Substring(4, attr.Length - 5))
+            .FirstOrDefault();
 
             return new HtmlElement
             {
@@ -50,8 +51,8 @@ namespace Html_Serializer
             };
         }
 
-        public  HtmlElement BuildTree(List<string> htmlLines)
-        { 
+        public HtmlElement BuildTree(List<string> htmlLines)
+        {
 
             var root = new HtmlElement { Name = "root" }; // אלמנט שורש מדומה
             var currentElement = root; // האובייקט הנוכחי בלולאה
@@ -71,7 +72,7 @@ namespace Html_Serializer
                 if (firstWord.StartsWith("/"))
                 {
                     // תגית סוגרת - חוזרים לאבא
-                    if (stack.Count > 1)
+                    if (stack.Count > 1 && stack.Peek().Name == firstWord.Substring(1))
                     {
                         stack.Pop();
                         currentElement = stack.Peek();
@@ -94,11 +95,16 @@ namespace Html_Serializer
                 }
                 else
                 {
+
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        currentElement.InnerHtml += line.Trim();
+                    }
                     // טקסט פנימי
-                    currentElement.InnerHtml += line.Trim();
                 }
             }
             return root;
         }
+        
     }
 }

@@ -9,8 +9,6 @@ namespace Html_Serializer
 {
     public static class HtmlElementExtensions
     {
-
-        //פונקציית הרחבה למציאת אלמנטים בעץ על פי סלקטור
         // פונקציית הרחבה למציאת אלמנטים בעץ על פי סלקטור
         public static HashSet<HtmlElement> FindBySelector(this HtmlElement root, Selector selector)
         {
@@ -21,42 +19,37 @@ namespace Html_Serializer
 
         private static void FindBySelectorRecursive(HtmlElement element, Selector selector, HashSet<HtmlElement> results)
         {
-            // אם האלמנט הנוכחי עונה לקריטריונים של הסלקטור
-            if (MatchesSelector(element, selector))
+            bool isMatch = MatchesSelector(element, selector);
+
+            if (isMatch && selector.Child == null)
             {
-                // הוספת האלמנט לתוצאות
-                if (selector.Child == null)
+                results.Add(element);
+            }
+            // אם האלמנט מתאים ויש סלקטור בן, המשך לחפש את הבן בתוך הילדים של האלמנט
+            if (isMatch && selector.Child != null)
+            {
+                foreach (var child in element.Children)
                 {
-                    results.Add(element);
-                }
-                else
-                {
-                    // אם יש סלקטור בן, בודקים את הילדים של האלמנט הנוכחי
-                    foreach (var child in element.Children)
-                    {
-                        FindBySelectorRecursive(child, selector.Child, results);
-                    }
+                    FindBySelectorRecursive(child, selector.Child, results);
                 }
             }
 
-            // נמשיך לבדוק את הילדים של האלמנט הנוכחי גם אם הוא עצמו לא מתאים
+            // המשך לבדוק את הילדים של האלמנט הנוכחי, ללא תלות אם הוא מתאים או לא
             foreach (var child in element.Children)
             {
                 FindBySelectorRecursive(child, selector, results);
             }
         }
-
         // פונקציה לבדיקת התאמה בין אלמנט לבין סלקטור
         private static bool MatchesSelector(HtmlElement element, Selector selector)
         {
             bool matchesTag = selector.TagName == null || Regex.Replace(element.Name, @"class|id", "") == selector.TagName;
             bool matchesId = selector.Id == null || element.Id == selector.Id;
-            bool matchesClasses = !selector.Classes.Any() || selector.Classes.All(cls => element.Classes.Contains(cls));
+            bool matchesClasses = !selector.Classes.Any() || selector.Classes.All(cls =>
+                element.Classes.Any(eClass => string.Equals(eClass, cls, StringComparison.OrdinalIgnoreCase)));
 
             return matchesTag && matchesId && matchesClasses;
         }
+
     }
-
-
-
 }

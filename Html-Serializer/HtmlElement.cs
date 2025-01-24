@@ -73,7 +73,5 @@ namespace Html_Serializer
                 current = current.Parent;
             }
         }
-
-
     }
 }
